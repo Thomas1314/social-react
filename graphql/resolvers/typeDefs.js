@@ -5,7 +5,7 @@ module.exports = gql`
     id: ID!
     body: String!
     createdAt: String!
-    username: String!
+    username: String
   }
 
   type User {
@@ -24,7 +24,7 @@ module.exports = gql`
   }
 
   type Query {
-    getPosts: [Post]
+    getPosts: [Post]!
     getPost(postId: ID!): Post
   }
 
