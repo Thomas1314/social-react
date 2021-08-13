@@ -70,14 +70,29 @@ module.exports = {
 
       // TODO: Make sure user doesnt already exist
 
-      const user = await User.findOne({ username });
-      if (user) {
-        throw new UserInputError("Username is taken", {
-          errors: {
-            username: "This username is taken",
-          },
+      const userEmailOrName = await User.find({
+        $or: [{ username }, { email }],
+      });
+
+      const typeNewErorr = () => {
+        userEmailOrName.find((el) => {
+          if (el.username === username) {
+            throw new UserInputError("Username is taken", {
+              errors: {
+                username: "This email is taken",
+              },
+            });
+          }
+          if (el.email === email) {
+            throw new UserInputError("Email is taken", {
+              errors: {
+                email: "This email is taken",
+              },
+            });
+          }
         });
-      }
+      };
+      userEmailOrName && typeNewErorr();
 
       // hash password and create an auth token
 
