@@ -79,7 +79,7 @@ module.exports = {
           if (el.username === username) {
             throw new UserInputError("Username is taken", {
               errors: {
-                username: "This email is taken",
+                username: "This username is taken",
               },
             });
           }
