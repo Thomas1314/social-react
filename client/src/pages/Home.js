@@ -5,33 +5,38 @@ import { Grid } from "semantic-ui-react";
 import PostCard from "../components/PostCard";
 
 const Home = () => {
-  const {
-    loading,
-    data: { getPosts: posts },
-  } = useQuery(FETCH_POSTS_QUERY);
+  const { loading, data = {}, error } = useQuery(GET_POSTS);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error.message}</div>
+  }
+
+  if (!data || !data.getPosts || !data.getPosts.length) {
+    return <div>No Data</div>;
+  }
+
+  const { getPosts: posts } = data;
   return (
     <Grid columns={3} divided>
       <Grid.Row>
         <h1>Recent Posts</h1>
       </Grid.Row>
       <Grid.Row>
-        {loading ? (
-          <h1>Loading posts..</h1>
-        ) : (
-          posts &&
-          posts.map((post) => (
-            <Grid.Column key={post.id}>
-              <PostCard post={post} />
-            </Grid.Column>
-          ))
-        )}
+        {posts?.map((post) => (
+          <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
+            <PostCard post={post} />
+          </Grid.Column>
+        ))}
       </Grid.Row>
     </Grid>
   );
 };
 
-const FETCH_POSTS_QUERY = gql`
+const GET_POSTS = gql`
   {
     getPosts {
       username

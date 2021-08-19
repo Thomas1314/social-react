@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, Image } from "semantic-ui-react";
+import { Card, Image } from "semantic-ui-react";
 import moment from 'moment';
 
 const PostCard = ({
@@ -11,10 +11,10 @@ const PostCard = ({
         <Image
           floated="right"
           size="mini"
-          src="/images/avatar/large/molly.png"
+          src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
         />
         <Card.Header>{username}</Card.Header>
-        <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
+        <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
         <Card.Description>{body}</Card.Description>
       </Card.Content>
       <Card.Content extra>
