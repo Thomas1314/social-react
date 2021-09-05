@@ -2,36 +2,31 @@ import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
+import { useForm } from "../util/hooks";
 
-const Register = () => {
+const Register = (props) => {
   const [errors, setErrors] = useState({});
 
-  const [values, setValues] = useState({
+  const { onChange, onSubmit, values } = useForm(registerUser, {
     username: "",
     password: "",
     email: "",
     confirmPassword: "",
   });
 
-  const onChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    update(proxy, result) {
-      console.log(result);
+    update(_, result) {
+      props.history.push("/");
     },
     onError(err) {
-      console.log(err.graphQLErrors[0].extensions.exception.errors);
-      setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      setErrors(err.graphQLErrors[0].extensions.errors);
     },
     variables: values,
   });
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  function registerUser() {
     addUser();
-  };
+  }
 
   return (
     <div className="form-container">
@@ -43,8 +38,8 @@ const Register = () => {
           placeholder="Username.."
           name="username"
           type="text"
-          // value={values.username ? true : }
-          error={errors.username}
+          value={values.username}
+          error={errors.username ? true : false}
           onChange={onChange}
         />
 
@@ -54,7 +49,7 @@ const Register = () => {
           name="email"
           type="email"
           value={values.email}
-          error={errors.email}
+          error={errors.email ? true : false}
           onChange={onChange}
         />
 
@@ -64,7 +59,7 @@ const Register = () => {
           name="password"
           type="password"
           value={values.password}
-          error={errors.password}
+          error={errors.password ? true : false}
           onChange={onChange}
         />
 
@@ -74,7 +69,7 @@ const Register = () => {
           name="confirmPassword"
           type="password"
           value={values.confirmPassword}
-          error={errors.username}
+          error={errors.username ? true : false}
           onChange={onChange}
         />
 
