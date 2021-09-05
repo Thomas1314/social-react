@@ -1,12 +1,22 @@
 import React from "react";
-import { Card, Image } from "semantic-ui-react";
-import moment from 'moment';
+import { Button, Card, Icon, Image, Label } from "semantic-ui-react";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
 const PostCard = ({
   post: { body, createdAt, id, username, likeCount, commentCount, likes },
 }) => {
+
+  const likePost = () => {
+    console.log("like post");
+  };
+
+  const commentOnPost = () => {
+    console.log("comment post");
+  };
+
   return (
-    <Card>
+    <Card fluid>
       <Card.Content>
         <Image
           floated="right"
@@ -14,11 +24,28 @@ const PostCard = ({
           src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
         />
         <Card.Header>{username}</Card.Header>
-        <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
+        <Card.Meta as={Link} to={`/posts/${id}`}>
+          {moment(createdAt).fromNow(true)}
+        </Card.Meta>
         <Card.Description>{body}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <p>buttons here</p>
+        <Button as="div" labelPosition="right" onClick={likePost}>
+          <Button color="teal" basic>
+            <Icon name="heart" />
+          </Button>
+          <Label basic color="teal" pointing="left">
+            {likeCount}
+          </Label>
+        </Button>
+        <Button as="div" labelPosition="right" onClick={commentOnPost}>
+          <Button color="blue" basic>
+            <Icon name="comments" />
+          </Button>
+          <Label basic color="teal" pointing="left">
+            {commentCount}
+          </Label>
+        </Button>
       </Card.Content>
     </Card>
   );

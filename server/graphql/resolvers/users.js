@@ -68,7 +68,7 @@ module.exports = {
         throw new UserInputError("Errors", { errors });
       }
 
-      // TODO: Make sure user doesnt already exist
+      // make sure user doesnt already exist
 
       const userEmailOrName = await User.find({
         $or: [{ username }, { email }],
