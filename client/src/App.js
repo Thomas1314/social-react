@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import { AuthProvider } from "./context/context";
+import AuthRoute from "./util/AuthRoute";
 
 const App = () => (
   <AuthProvider>
@@ -17,8 +18,8 @@ const App = () => (
       <Container>
         <MenuBar />
         <Route exact path="/" component={Home} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
+        <AuthRoute exact path="/login" component={Login} />
+        <AuthRoute exact path="/register" component={Register} />
       </Container>
     </Router>
   </AuthProvider>

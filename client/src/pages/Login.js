@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import React, { useContext, useState } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { AuthContext } from "../context/context";
+import { LOGIN_USER } from "../graphql/mutations/loginUser";
 import { useForm } from "../util/hooks";
 
 const Login = (props) => {
@@ -70,17 +71,5 @@ const Login = (props) => {
     </div>
   );
 };
-
-const LOGIN_USER = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      id
-      createdAt
-      email
-      username
-      token
-    }
-  }
-`;
 
 export default Login;
