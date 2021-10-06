@@ -1,5 +1,5 @@
-import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+import { useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Button, Icon, Label } from "semantic-ui-react";
 import { LIKE_POST } from "../graphql/mutations/likePost";
@@ -9,7 +9,7 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    if (user && likes.find((like) => like.username === user.username)) {
+    if (user && likes?.find((like) => like.username === user.username)) {
       setLiked(true);
     } else setLiked(false);
   }, [user, likes]);
