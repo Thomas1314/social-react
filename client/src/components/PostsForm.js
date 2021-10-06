@@ -11,11 +11,21 @@ const PostForm = () => {
   });
   const [createPost, { error }] = useMutation(CREATE_POST, {
     variables: values,
-    update(_, result) {
-      console.log(result);
+    update(proxy, result) {
+      const data = proxy.readQuery({
+        query: GET_POSTS,
+      });
+      let newData = [...data.getPosts];
+      newData = [result.data.createPost, ...data.getPosts];
+      proxy.writeQuery({
+        query: GET_POSTS,
+        data: {
+          ...data,
+          getPosts: { newData },
+        },
+      });
       values.body = "";
     },
-    // refetchQueries: [GET_POSTS],
   });
 
   function createPostCallback() {
@@ -23,20 +33,30 @@ const PostForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit}>
-      <h2>Create post:</h2>
-      <Form.Field>
-        <Form.Input
-          placeholder="What do you want to talk about"
-          name="body"
-          onChange={onChange}
-          values={values.body}
-        />
-        <Button type="submit" color="teal">
-          Submit
-        </Button>
-      </Form.Field>
-    </Form>
+    <>
+      <Form onSubmit={onSubmit}>
+        <h2>Create post:</h2>
+        <Form.Field>
+          <Form.Input
+            placeholder="What do you want to talk about"
+            name="body"
+            onChange={onChange}
+            value={values.body}
+            error={error ? true : false}
+          />
+          <Button type="submit" color="teal">
+            Submit
+          </Button>
+        </Form.Field>
+      </Form>
+      {error && (
+        <div className="ui error message" style={{ marginBottom: 20 }}>
+          <ul className="list">
+            <li>{error.graphQLErrors[0].message}</li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 };
 
