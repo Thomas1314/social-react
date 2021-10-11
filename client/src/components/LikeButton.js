@@ -16,6 +16,20 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
 
   const [likePost] = useMutation(LIKE_POST, {
     variables: { postId: id },
+    // update(proxy, result) {
+    //   const data = proxy.readQuery({
+    //     query: GET_POSTS,
+    //   });
+    //   let newData = [...data.getPosts];
+    //   newData = [result.data.likePost, ...data.getPosts];
+    //   proxy.writeQuery({
+    //     query: GET_POSTS,
+    //     data: {
+    //       ...data,
+    //       getPosts: { newData },
+    //     },
+    //   });
+    // },
     refetchQueries: [GET_POSTS]
   });
 

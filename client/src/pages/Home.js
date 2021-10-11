@@ -19,6 +19,7 @@ const Home = () => {
   }
 
   const { getPosts: posts } = data;
+
   return (
     <Grid columns={3} divided>
       <Grid.Row className="page-title">
