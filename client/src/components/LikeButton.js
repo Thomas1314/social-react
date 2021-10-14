@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Button, Icon, Label } from "semantic-ui-react";
 import { LIKE_POST } from "../graphql/mutations/likePost";
 import { GET_POSTS } from "../graphql/queries/getPosts";
+import { GET_POST } from "../graphql/queries/getPost";
+import CustomPopup from "../util/CustomPopup";
 
 const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
   const [liked, setLiked] = useState(false);
@@ -16,21 +18,7 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
 
   const [likePost] = useMutation(LIKE_POST, {
     variables: { postId: id },
-    // update(proxy, result) {
-    //   const data = proxy.readQuery({
-    //     query: GET_POSTS,
-    //   });
-    //   let newData = [...data.getPosts];
-    //   newData = [result.data.likePost, ...data.getPosts];
-    //   proxy.writeQuery({
-    //     query: GET_POSTS,
-    //     data: {
-    //       ...data,
-    //       getPosts: { newData },
-    //     },
-    //   });
-    // },
-    refetchQueries: [GET_POSTS]
+    refetchQueries: [GET_POSTS, GET_POST],
   });
 
   const likeButton = user ? (
@@ -49,9 +37,20 @@ const LikeButton = ({ user, post: { id, likeCount, likes } }) => {
     </Button>
   );
 
-  return (
+  return user ? (
     <Button as="div" labelPosition="right" onClick={likePost}>
-      {likeButton}
+      <CustomPopup content={liked ? "Unlike" : "Like"}>
+        {likeButton}
+      </CustomPopup>
+      <Label basic color="teal" pointing="left">
+        {likeCount}
+      </Label>
+    </Button>
+  ) : (
+    <Button labelPosition="right" as="a" href="/login">
+      <CustomPopup content={liked ? "Unlike" : "Like"}>
+        {likeButton}
+      </CustomPopup>
       <Label basic color="teal" pointing="left">
         {likeCount}
       </Label>

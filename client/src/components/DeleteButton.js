@@ -4,7 +4,7 @@ import { GET_POSTS } from "../graphql/queries/getPosts";
 import { useMutation } from "@apollo/client";
 import { DELETE_COMMENT } from "../graphql/mutations/deleteComment";
 import { DELETE_POST } from "../graphql/mutations/deletePost";
-import MyPopup from "../util/MyPopup";
+import CustomPopup from "../util/CustomPopup";
 
 const DeleteButton = ({ postId, commentId, callback }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -12,7 +12,7 @@ const DeleteButton = ({ postId, commentId, callback }) => {
   const mutation = commentId ? DELETE_COMMENT : DELETE_POST;
 
   const [deletePostMutation] = useMutation(mutation, {
-    update(proxy) {
+    update(proxy, result) {
       setConfirmOpen(false);
       if (!commentId) {
         const data = proxy.readQuery({
@@ -22,8 +22,7 @@ const DeleteButton = ({ postId, commentId, callback }) => {
         proxy.writeQuery({
           query: GET_POSTS,
           data: {
-            ...data,
-            getPosts: { newData },
+            getPosts: { newData, ...data.getPosts },
           },
         });
       }
@@ -34,7 +33,7 @@ const DeleteButton = ({ postId, commentId, callback }) => {
 
   return (
     <>
-      <MyPopup content={commentId ? "Delete comment" : "Delete post"}>
+      <CustomPopup content={commentId ? "Delete comment" : "Delete post"}>
         <Button
           as="div"
           color="red"
@@ -43,7 +42,7 @@ const DeleteButton = ({ postId, commentId, callback }) => {
         >
           <Icon name="trash" style={{ margin: 0 }} />
         </Button>
-      </MyPopup>
+      </CustomPopup>
       <Confirm
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}

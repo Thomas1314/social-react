@@ -1,11 +1,13 @@
+import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import React from "react";
 import { Button, Form } from "semantic-ui-react";
 import { CREATE_POST } from "../graphql/mutations/createPost";
 import { GET_POSTS } from "../graphql/queries/getPosts";
 import { useForm } from "../util/hooks";
 
 const PostForm = () => {
+  const [, setError] = useState();
+
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: "",
   });
@@ -16,16 +18,16 @@ const PostForm = () => {
       const data = proxy.readQuery({
         query: GET_POSTS,
       });
-      let newData = [...data.getPosts];
-      newData = [result.data.createPost, ...data.getPosts];
       proxy.writeQuery({
         query: GET_POSTS,
         data: {
-          ...data,
-          getPosts: { newData },
+          getPosts: [result.data.createPost, ...data.getPosts],
         },
       });
       values.body = "";
+    },
+    onError(err) {
+      setError(err);
     },
   });
 
@@ -39,7 +41,7 @@ const PostForm = () => {
         <h2>Create post:</h2>
         <Form.Field>
           <Form.Input
-            placeholder="What do you want to talk about"
+            placeholder="What do you want to talk about?"
             name="body"
             onChange={onChange}
             value={values.body}

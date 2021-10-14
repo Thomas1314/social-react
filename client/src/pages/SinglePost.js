@@ -16,6 +16,7 @@ import { AuthContext } from "../context/context";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_COMMENT } from "../graphql/mutations/createComment";
 import { GET_POST } from "../graphql/queries/getPost";
+import CustomPopup from "../util/CustomPopup";
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
@@ -53,22 +54,6 @@ const SinglePost = (props) => {
     props.history.push("/");
   };
 
-  //   let postMarkup;
-  //   if (!getPost) {
-  //     postMarkup = <p>Loading post..</p>;
-  //   } else {
-  //     const {
-  //       id,
-  //       body,
-  //       createdAt,
-  //       username,
-  //       //   comments,
-  //       likes,
-  //       likeCount,
-  //       commentCount,
-  //     } = getPost;
-
-  // postMarkup = (
   return (
     <Grid>
       <Grid.Row>
@@ -88,18 +73,20 @@ const SinglePost = (props) => {
             <hr />
             <Card.Content extra>
               <LikeButton user={user} post={{ id, likes, likeCount }} />
-              <Button
-                as="div"
-                labelPosition="right"
-                onClick={() => console.log("comment on post")}
-              >
-                <Button basic color="blue">
-                  <Icon name="comments" />
+              <CustomPopup content="Comment on post">
+                <Button
+                  as="div"
+                  labelPosition="right"
+                  onClick={() => console.log("comment on post")}
+                >
+                  <Button basic color="blue">
+                    <Icon name="comments" />
+                  </Button>
+                  <Label basic color="blue" pointing="left">
+                    {commentCount}
+                  </Label>
                 </Button>
-                <Label basic color="blue" pointing="left">
-                  {commentCount}
-                </Label>
-              </Button>
+              </CustomPopup>
               {user && user.username === username && (
                 <DeleteButton postId={id} callback={deletePostCallback} />
               )}
@@ -149,7 +136,5 @@ const SinglePost = (props) => {
       </Grid.Row>
     </Grid>
   );
-
-  // return postMarkup;
 };
 export default SinglePost;
